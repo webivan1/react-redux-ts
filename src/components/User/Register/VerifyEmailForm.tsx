@@ -10,8 +10,6 @@ export const VerifyEmailForm: FC<PropTypes> = (props: PropTypes) => {
   const { formData, error, loader } = props;
 
   const onSubmit = (data: RegisterFormType) => props.onVerified(data);
-
-  const handlePrevForm = () => props.onSetStep('FormRegisterUser');
   const handleClose = () => props.onClose();
 
   const verifyCodeField = register<FormControl<"input"> & HTMLInputElement>({
@@ -47,11 +45,8 @@ export const VerifyEmailForm: FC<PropTypes> = (props: PropTypes) => {
         <Button disabled={loader} type={'button'} onClick={handleClose} variant={'warning'} className={'mr-2'}>
           Cancel
         </Button>
-        <Button disabled={loader} type={'button'} onClick={handlePrevForm} variant={'secondary'} className={'mr-2'}>
-          Prev
-        </Button>
         <Button disabled={loader} type={'submit'} variant={'primary'}>
-          Register
+          Verify
         </Button>
       </div>
     </Form>

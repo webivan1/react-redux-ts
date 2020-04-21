@@ -88,7 +88,7 @@ export const FormRegisterUser: FC<PropTypes> = (props: PropTypes) => {
 
       <div className={'text-right'}>
         <Button disabled={loader} type={'submit'} variant={'primary'}>
-          Next
+          Register
         </Button>
       </div>
     </Form>

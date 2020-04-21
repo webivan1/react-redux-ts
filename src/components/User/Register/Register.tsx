@@ -29,8 +29,7 @@ export const Register: FC<PropsTypes> = (props: PropsTypes) => {
   const onSetStep = (step: keyof FormsType) => setFormName(step);
 
   const onRegister = async (newFormData: RegisterFormType) => {
-    await dispatch(registerAction.registerUserAsync(newFormData));
-    onSetStep('VerifyEmailForm');
+    await dispatch(registerAction.registerUserAsync(newFormData, () => onSetStep('VerifyEmailForm')));
   };
 
   const onVerified = async (newFormData: RegisterFormType) => {

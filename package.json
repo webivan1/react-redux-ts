@@ -16,6 +16,7 @@
     "@types/uuid": "^7.0.2",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
+    "firebase": "^7.14.1",
     "js-cookie": "^2.2.1",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
@@ -33,11 +34,12 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "deploy": "npm run build && firebase deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier:ts": "prettier-eslint --list-different $PWD/'src/**/*.{ts,tsx}'; prettier-eslint --write $PWD/'src/**/*.{ts,tsx}';",
     "lint": "npm run typescript && npm run lint:ts",
-    "lint:ts": "eslint './src/**/*.{ts,tsx}'",
+    "lint:ts": "eslint ./src/**/*.{ts,tsx}",
     "typescript": "tsc"
   },
   "eslintConfig": {

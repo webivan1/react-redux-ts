@@ -8,16 +8,17 @@ import { TodoAddForm } from "./TodoAddForm";
 // Actions
 import { setDefaultTodoListAsync, removeFormList } from "../../store/todo/list/actions";
 import { editDetail } from "../../store/todo/detail/actions";
+import { TodoListType } from "../../store/todo/types";
 
 export const Todo: FC = () => {
   const dispatch = useDispatch();
-  const data = useSelector((state: RootState) => state.todoList);
+  const data = useSelector<RootState, TodoListType>(state => state.todoList);
 
   useEffect(() => {
     if (!data.todoList.length) {
       dispatch(setDefaultTodoListAsync())
     }
-  }, []);
+  }, [dispatch]);
 
   const handleRemove = (id: string) => dispatch(removeFormList({ id }));
   const handleToggle = (id: string, completed: boolean) => {

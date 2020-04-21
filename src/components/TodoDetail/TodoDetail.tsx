@@ -24,7 +24,7 @@ const TodoDetail: FC<PropTypes> = (props: PropTypes) => {
     return () => {
       dispatch(clearDetail())
     }
-  }, []);
+  }, [dispatch]);
 
   if (detail.error) {
     return <Redirect to={'/todos'} />

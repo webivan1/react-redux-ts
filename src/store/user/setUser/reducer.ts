@@ -18,10 +18,7 @@ export default createReducer(initialState, {
     state.user = false;
     Cookies.remove('user');
   },
-  [userAction.autoLogin.type]: (state: UserType): void => {
-    const user = Cookies.getJSON('user');
-    if (user && !state.user) {
-      state.user = user;
-    }
+  [userAction.autoLogin.type]: (state: UserType, action: PayloadAction<UserModelType>): void => {
+    state.user = action.payload;
   }
 });

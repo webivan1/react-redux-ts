@@ -64,7 +64,7 @@ export const TodoEditForm: FC<PropTypes> = ({ todo, onEdit, onRemove }: PropType
               {todo.name} {' '}
               <a
                 className={'text-primary text-underline'}
-                href={void 0}
+                href="javascript:void(0)"
                 onClick={handleSetEditable}
               >Edit</a>
             </h3>
