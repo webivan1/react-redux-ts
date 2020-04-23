@@ -2,12 +2,12 @@ import React, { FC }  from "react";
 import "./style/main.scss";
 import { routes, Route } from "./router/router";
 import { useDispatch, useSelector } from "react-redux";
-import { autoLoginAsync } from "./store/user/setUser/actions";
 import { BrowserRouter, Switch, Route as RouteComponent } from "react-router-dom";
+import { autoLoginAsync } from "./store/user/login/actions";
+import { RootState } from "./store/store";
 
 // Components
 import { Header } from "./components/layouts/header/Header";
-import { RootState } from "./store/store";
 
 export const App: FC = () => {
 

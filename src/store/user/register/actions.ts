@@ -24,27 +24,30 @@ export const registerUserAsync = (form: RegisterFormType, completeSuccess?: () =
       completeSuccess && completeSuccess();
     } catch (e) {
       dispatch(setError(e.message));
-      console.log('SET ERROR');
     } finally {
       dispatch(setLoader(false));
     }
   }
 };
 
-// @todo update user
-export const verifyUserAsync = (verifyCode: string): AppThunk => (dispatch, getState) => {
-  dispatch(setLoader(true));
+export const verifyUserAsync = (verifyCode: string, completeSuccess?: () => void): AppThunk => {
+  return async (dispatch, getState) => {
+    dispatch(setLoader(true));
 
-  const { user } = getState();
+    const { user } = getState();
 
-  setTimeout(() => {
-    // send to server { id, verifyCode }
-    // response form server { id, username, email, status, createdAt }
-    if (user.user) {
-      dispatch(userAction.signIn({...user.user, status: UserStatuses.active}));
+    try {
+      if (user.user) {
+        const newUser = await api.user.verify(user.user, verifyCode);
+        dispatch(userAction.signIn(newUser));
+        completeSuccess && completeSuccess();
+      } else {
+        dispatch(setError('You are not login in'));
+      }
+    } catch (e) {
+      dispatch(setError(e.message));
+    } finally {
       dispatch(setLoader(false));
-    } else {
-      dispatch(setError('You are not login in'));
     }
-  }, 500);
+  }
 };

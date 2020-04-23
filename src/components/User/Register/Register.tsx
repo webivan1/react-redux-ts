@@ -11,16 +11,15 @@ import { RegisterFormType } from "../../../store/user/register/types";
 // Actions
 import * as registerAction from "../../../store/user/register/actions";
 
+// Types
+import { PropFormTypes } from "../Auth/types";
+
 const formNames: FormsType = {
   FormRegisterUser,
   VerifyEmailForm
 };
 
-type PropsTypes = {
-  onClose: () => void;
-}
-
-export const Register: FC<PropsTypes> = (props: PropsTypes) => {
+export const Register: FC<PropFormTypes> = (props: PropFormTypes) => {
   const [formName, setFormName] = useState<keyof FormsType>('FormRegisterUser');
 
   const dispatch = useDispatch();
@@ -45,6 +44,7 @@ export const Register: FC<PropsTypes> = (props: PropsTypes) => {
         onSetStep={onSetStep}
         onRegister={onRegister}
         onVerified={onVerified}
+        onChangeForm={props.onChangeForm}
         onClose={() => props.onClose()}
         error={error}
         formData={form}

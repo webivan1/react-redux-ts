@@ -15,3 +15,9 @@ export type UserModelType = {
 export type UserType = {
   user: UserModelType|false;
 }
+
+export type UserUpdateType = {
+  username?: string;
+  email?: string;
+  status?: keyof typeof UserStatuses;
+}

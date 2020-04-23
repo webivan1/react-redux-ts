@@ -12,9 +12,12 @@ export interface ISchemeUser extends UserModelType {
 export type UserResponseCreatedSuccessType = {
   status: ResponseStatuses.success;
   user: UserModelType;
+  token?: string;
 }
 
 export type UserResponseCreatedFailureType = {
   status: ResponseStatuses.error;
   message: string;
 }
+
+export type UserResponseType = UserResponseCreatedSuccessType | UserResponseCreatedFailureType;

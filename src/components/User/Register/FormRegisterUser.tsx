@@ -4,10 +4,11 @@ import { useForm } from "react-hook-form";
 import { Button, Form, FormControl, Alert } from "react-bootstrap";
 import { emailRegex } from "../../../regex";
 import { RegisterFormType } from "../../../store/user/register/types";
+import { ListComponents } from "../Auth/types";
 
 export const FormRegisterUser: FC<PropTypes> = (props: PropTypes) => {
   const { register, handleSubmit, errors, getValues } = useForm<RegisterFormType>();
-  const { formData, loader, error } = props;
+  const { formData, loader, error, onChangeForm } = props;
 
   const onSubmit = (data: RegisterFormType) => props.onRegister(data);
 
@@ -36,6 +37,17 @@ export const FormRegisterUser: FC<PropTypes> = (props: PropTypes) => {
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      {typeof onChangeForm === 'function' ? (
+        <p className={'text-muted lead'}>
+          If you have account, you can {' '}
+          <a
+            href={'#'}
+            className={'text-link'}
+            onClick={() => onChangeForm(ListComponents.login)}
+          >sigh in</a>
+        </p>
+      ) : null}
+
       <Form.Group>
         <Form.Label>Username <span className={'text-danger'}>*</span></Form.Label>
         <Form.Control

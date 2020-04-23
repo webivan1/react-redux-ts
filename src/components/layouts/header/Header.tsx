@@ -1,11 +1,17 @@
 import React, { FC, useState } from "react";
-import { Navbar, Nav, Modal, Button, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav, Button, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../../store/store";
-import { logout } from "../../../store/user/setUser/actions";
+import { logoutAsync } from "../../../store/user/setUser/actions";
+import { Auth } from "../../User/Auth/Auth";
 
-import { Register } from "../../User/Register/Register";
+enum AuthForm {
+  'login' = 'login',
+  'register' = 'register'
+}
+
+type AuthFormType = keyof typeof AuthForm;
 
 export const Header: FC = () => {
   const dispatch = useDispatch();
@@ -14,20 +20,17 @@ export const Header: FC = () => {
 
   const [authModal, setAuthModal] = useState(false);
 
-  const handleShowRegisterModal = () => setAuthModal(true);
-  const handleHideRegisterModal = () => setAuthModal(false);
-  const handleLogout = () => dispatch(logout());
+  const handleShowAuthModal = () => setAuthModal(true);
+  const handleHideAuthModal = () => setAuthModal(false);
+
+  const handleLogout = () => dispatch(logoutAsync());
 
   return (
     <>
-      <Modal show={authModal} onHide={handleHideRegisterModal}>
-        <Modal.Header closeButton>
-          <Modal.Title>Registration</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Register onClose={handleHideRegisterModal} />
-        </Modal.Body>
-      </Modal>
+      <Auth
+        isShow={authModal}
+        onHide={handleHideAuthModal}
+      />
 
       <Navbar bg="light" expand="lg">
         <Navbar.Brand as={Link} to={'/'}>TodoApp</Navbar.Brand>
@@ -49,14 +52,9 @@ export const Header: FC = () => {
                 <NavDropdown.Item as={Button} onClick={handleLogout}>Logout</NavDropdown.Item>
               </NavDropdown>
             ) : (
-              <>
-                <Button className={'mr-1'} variant={'link'}>
-                  Sign In
-                </Button>
-                <Button variant={'link'} onClick={handleShowRegisterModal}>
-                  Sign Up
-                </Button>
-              </>
+              <Button className={'mr-1'} variant={'link'} onClick={handleShowAuthModal}>
+                Log in
+              </Button>
             )}
           </Nav>
         </Navbar.Collapse>
