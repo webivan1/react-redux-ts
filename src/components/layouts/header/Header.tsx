@@ -2,21 +2,15 @@ import React, { FC, useState } from "react";
 import { Navbar, Nav, Button, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../../store/store";
 import { logoutAsync } from "../../../store/user/setUser/actions";
 import { Auth } from "../../User/Auth/Auth";
 
-enum AuthForm {
-  'login' = 'login',
-  'register' = 'register'
-}
-
-type AuthFormType = keyof typeof AuthForm;
+import { RootState } from "../../../store/store";
 
 export const Header: FC = () => {
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state);
-  const { todoList, user } = state;
+  const { user } = state;
 
   const [authModal, setAuthModal] = useState(false);
 
@@ -39,9 +33,7 @@ export const Header: FC = () => {
           <Nav className="mr-auto">
             <Nav.Link as={Link} to={'/'}>Home</Nav.Link>
             {user.user ? (
-              <Nav.Link as={Link} to={'/todos'}>
-                Todo <strong>({ todoList.todoList.length })</strong>
-              </Nav.Link>
+              <Nav.Link as={Link} to={'/todos'}>Todo</Nav.Link>
             ) : null}
           </Nav>
           <Nav>

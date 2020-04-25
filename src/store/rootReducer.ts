@@ -1,6 +1,6 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
-import { todoList, todoDetail } from "./todo";
+import { todoList, todoDetail, todoCreate } from "./todo";
 import { register, login, user } from "./user";
 
 export default combineReducers({
@@ -8,5 +8,6 @@ export default combineReducers({
   register,
   login,
   todoList,
+  todoCreate,
   todoDetail,
 });

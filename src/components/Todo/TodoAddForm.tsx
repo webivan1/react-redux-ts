@@ -1,40 +1,44 @@
-import React, { FC, createRef, FormEvent } from "react";
-import { useDispatch } from "react-redux";
+import React, { FC } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useForm } from "react-hook-form";
 import { Container, Row, Col, InputGroup, FormControl, Button, Form } from "react-bootstrap";
-import { isHtmlInputElement } from "../../guards";
 
 // Actions
-import { addToList } from "../../store/todo/list/actions";
+import { addNewTodoAsync } from "../../store/todo/create/actions";
+
+// Types
+import { RootState } from "../../store/store";
+import { TodoAddType } from "../../store/todo/types";
 
 export const TodoAddForm: FC = () => {
   const dispatch = useDispatch();
-  const input = createRef<
-    FormControl<"input"> & HTMLInputElement
-  >();
+  const { loader, error } = useSelector((state: RootState) => state.todoCreate);
+  const { errors, register, handleSubmit, setValue } = useForm<TodoAddType>();
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (isHtmlInputElement(input.current)) {
-      const value = input.current.value.trim();
-      if (value) {
-        dispatch(addToList({ name: value }));
-        input.current.value = '';
-      }
-    }
+  const onSubmit = async (data: TodoAddType) => {
+    setValue('name', '');
+    await dispatch(addNewTodoAsync(data));
   };
 
   return (
     <Container fluid className={'py-5 bg-primary'}>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <Row className={'justify-content-md-center'}>
           <Col md={6} className={'text-center'}>
             <InputGroup>
-              <FormControl
+              <Form.Control
+                name="name"
                 placeholder="Todo title..."
-                ref={input}
+                isInvalid={!!errors.name || !!error}
+                disabled={loader}
+                ref={register<FormControl<"input"> & HTMLInputElement>({
+                  required: true,
+                  minLength: 2,
+                  maxLength: 150
+                })}
               />
               <InputGroup.Append>
-                <Button variant="warning">
+                <Button type={'submit'} disabled={loader} variant="warning">
                   Add
                 </Button>
               </InputGroup.Append>

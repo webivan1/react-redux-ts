@@ -1,12 +1,14 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { Table, Button, ButtonGroup } from "react-bootstrap";
-import { TodoListItemType } from "../../store/todo/types";
+
+// Types
+import { TodoType } from "../../store/todo/types";
 
 declare function confirm(message: string): boolean;
 
 type PropTypes = {
-  todos: TodoListItemType[],
+  todos: TodoType[],
   onToggle: (id: string, completed: boolean) => void;
   onRemove: (id: string) => void;
 }
@@ -23,7 +25,7 @@ export const TodoList: FC<PropTypes> = ({ todos, onToggle, onRemove }: PropTypes
           </tr>
         </thead>
         <tbody>
-          {todos.length > 0 ? todos.map((item: TodoListItemType) => (
+          {todos.length > 0 ? todos.map((item: TodoType) => (
             <tr key={item.id}>
               <td>
                 <Link to={`/todos/${item.id}`}>

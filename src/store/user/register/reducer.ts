@@ -4,10 +4,10 @@ import * as registerAction from "./actions";
 
 const initialState: RegisterType = {
   form: {
-    username: 'Test',
-    email: 'test@test.com',
-    password: '12345',
-    passwordConfirmation: '12345',
+    username: '',
+    email: '',
+    password: '',
+    passwordConfirmation: '',
     verifyCode: ''
   },
   error: null,

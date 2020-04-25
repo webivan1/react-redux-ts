@@ -1,14 +1,24 @@
 import React, { FC, useEffect } from "react";
 import { withRouter, Redirect, RouteComponentProps } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../store/store";
 import { Spinner, Alert, Container } from "react-bootstrap";
 import { TodoEditForm } from "./TodoEditForm";
 
 // Actions
-import { findTodoAsync, editDetail, clearDetail } from "../../store/todo/detail/actions";
-import { removeFormList } from "../../store/todo/list/actions";
-import { TodoEditType } from "../../store/todo/types";
+import {
+  setDetail,
+  clearDetail,
+  startFetching,
+  stopFetching,
+  setError,
+  findTodoAsync,
+  updateTodoAsync, removeTodoAsync
+} from "../../store/todo/detail/actions";
+
+// Types
+import { RootState } from "../../store/store";
+import { TodoEditType } from "../../store/todo/detail/types";
+import { TodoType } from "../../store/todo/types";
 
 type PropTypes = RouteComponentProps<{ id: string }>;
 
@@ -16,7 +26,7 @@ const TodoDetail: FC<PropTypes> = (props: PropTypes) => {
 
   const id: string = props.match.params.id;
   const dispatch = useDispatch();
-  const detail = useSelector((state: RootState) => state.todoDetail);
+  const { detail, error, loader } = useSelector((state: RootState) => state.todoDetail);
 
   useEffect(() => {
     dispatch(findTodoAsync(id));
@@ -26,26 +36,54 @@ const TodoDetail: FC<PropTypes> = (props: PropTypes) => {
     }
   }, [dispatch]);
 
-  if (detail.error) {
+  const onEdit = (attrs: TodoEditType) => {
+    if (detail) {
+      const onSuccess = (newTodo: TodoType) => dispatch(setDetail(newTodo));
+
+      dispatch(updateTodoAsync(
+        detail.id, attrs, startFetching, stopFetching, onSuccess, setError, () => setError(null)
+      ));
+    }
+  };
+
+  const onRemove = async () => {
+    if (detail) {
+      await dispatch(removeTodoAsync(
+        detail.id, startFetching, stopFetching, setError, () => setError(null)
+      ));
+
+      dispatch(setError('Todo has been deleted'));
+    }
+  };
+
+  if (error) {
     return <Redirect to={'/todos'} />
   }
 
-  const onEdit = (attrs: TodoEditType) => dispatch(editDetail(attrs));
-  const onRemove = (id: string) => dispatch(removeFormList({ id }));
-
   return (
     <Container className={'pt-5'}>
-      {detail.loader ? (
-        <Spinner animation="grow" variant="info" />
-      ) : (detail.error || !detail.detail ? (
-        <Alert variant={'danger'}>{detail.error || 'Waiting...'}</Alert>
-      ) : (
+      <h1>
+        <span className={detail?.isCompleted ? 'text-completed' : ''}>
+          {detail?.name}
+        </span>{' '}
+
+        {'{'}{detail?.isCompleted ? (
+          <span className="text-success">Completed!</span>
+        ) : (
+          <span className="text-warning">Todo</span>
+        )}{'}'}
+
+        {loader ? <Spinner animation="grow" variant="info" /> : null}
+      </h1>
+
+      {detail ? (
         <TodoEditForm
-          todo={detail.detail}
+          loader={loader}
+          todo={detail}
           onEdit={onEdit}
           onRemove={onRemove}
         />
-      ))}
+      ) : null}
     </Container>
   )
 };

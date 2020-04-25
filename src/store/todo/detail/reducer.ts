@@ -1,12 +1,11 @@
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
+
+// Actions
 import * as detailAction from "./actions";
-import * as listAction from "../list/actions";
-import {
-  TodoDetailType,
-  TodoType,
-  TodoEditType,
-  TodoIdType
-} from "../types";
+
+// Types
+import { TodoType } from "../types";
+import { TodoDetailType } from "./types";
 
 const initialState: TodoDetailType = {
   loader: false,
@@ -19,15 +18,7 @@ export default createReducer(initialState, {
     state.error = null;
     state.detail = action.payload;
   },
-  [detailAction.editDetail.type]: (state: TodoDetailType, action: PayloadAction<TodoEditType>): void => {
-    const { name, isCompleted } = action.payload;
-
-    if (state.detail) {
-      state.detail.name = name || state.detail.name;
-      state.detail.isCompleted = isCompleted !== undefined ? isCompleted : state.detail.isCompleted;
-    }
-  },
-  [detailAction.setError.type]: (state: TodoDetailType, action: PayloadAction<string>): void => {
+  [detailAction.setError.type]: (state: TodoDetailType, action: PayloadAction<string|null>): void => {
     state.error = action.payload;
   },
   [detailAction.startFetching.type]: (state: TodoDetailType): void => {
@@ -40,14 +31,6 @@ export default createReducer(initialState, {
     if (state.detail) {
       state.detail = null;
       state.error = null;
-    }
-  },
-
-  // Extra reducers
-  [listAction.removeFormList.type]: (state: TodoDetailType, action: PayloadAction<TodoIdType>): void => {
-    if (state.detail && state.detail.id === action.payload.id) {
-      state.detail = null;
-      state.error = 'Todo has been deleted';
     }
   }
 });

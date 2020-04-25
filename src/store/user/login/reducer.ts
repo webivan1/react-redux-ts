@@ -1,7 +1,10 @@
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
-import { LoginFormType, LoginType } from "./types";
+
+// Actions
 import * as loginActions from "./actions";
-import * as userActions from "../setUser/actions";
+
+// Types
+import { LoginFormType, LoginType } from "./types";
 
 const initialState: LoginType = {
   loader: false,

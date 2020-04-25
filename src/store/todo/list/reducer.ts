@@ -1,53 +1,41 @@
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
-import * as listAction from "./actions";
-import * as detailAction from "../detail/actions";
-import { generateId, sortList } from "../helpers";
-import {
-  TodoEditType,
-  TodoIdType,
-  TodoListItemType,
-  TodoListType,
-  TodoAddType
-} from "../types";
 
-const initialState: TodoListType = {
+// Actions
+import * as listAction from "./actions";
+
+// Types
+import { TodoType } from "../types";
+import { TodoListStateType, TodoListType } from "./types";
+
+const initialState: TodoListStateType = {
   todoList: [],
-  loader: false
+  error: null,
+  loader: false,
+  pagination: {
+    currentPage: 1,
+    isNextPage: false,
+    total: 0,
+  }
 };
 
 export default createReducer(initialState, {
-  [listAction.setToList.type]: (state: TodoListType, action: PayloadAction<TodoListItemType[]>): void => {
-    state.todoList = sortList(action.payload);
+  [listAction.setToList.type]: (state: TodoListStateType, action: PayloadAction<TodoListType>): void => {
+    state.todoList = action.payload.todoList;
+    state.pagination = action.payload.pagination;
   },
-  [listAction.addToList.type]: (state: TodoListType, action: PayloadAction<TodoAddType>): void => {
-    state.todoList.unshift({
-      id: generateId(),
-      name: action.payload.name,
-      isCompleted: false
-    });
-  },
-  [listAction.removeFormList.type]: (state: TodoListType, action: PayloadAction<TodoIdType>): void => {
-    const findIndex = state.todoList.findIndex(item => item.id === action.payload.id);
-    if (findIndex >= 0) {
-      state.todoList.splice(findIndex, 1);
-    }
-  },
-  [listAction.startFetching.type]: (state: TodoListType): void => {
+  [listAction.startFetching.type]: (state: TodoListStateType): void => {
     state.loader = true;
   },
-  [listAction.stopFetching.type]: (state: TodoListType): void => {
+  [listAction.stopFetching.type]: (state: TodoListStateType): void => {
     state.loader = false;
   },
-
-  // Extra reducers
-  [detailAction.editDetail.type]: (state: TodoListType, action: PayloadAction<TodoEditType>): void => {
-    const { id, name, isCompleted } = action.payload;
-    const todo = state.todoList.find(item => item.id === id);
-    if (todo) {
-      todo.name = name || todo.name;
-      todo.isCompleted = isCompleted !== undefined ? isCompleted : todo.isCompleted;
+  [listAction.setError.type]: (state: TodoListStateType, action: PayloadAction<string|null>): void => {
+    state.error = action.payload;
+  },
+  [listAction.updateItem.type]: (state: TodoListStateType, action: PayloadAction<TodoType>): void => {
+    const findIndex: number = state.todoList.findIndex(({ id }) => id === action.payload.id);
+    if (findIndex >= 0) {
+      state.todoList[findIndex] = {...action.payload};
     }
-
-    state.todoList = sortList(state.todoList);
-  }
+  },
 });
